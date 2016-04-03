@@ -16,4 +16,4 @@ test:
 	npm test
 
 archive: build
-	cd ./build/; zip -r DigestAuthDynamicValue.zip "$(identifier)/"
+	cd ./build/; zip -r JsonWebTokenDynamicValue.zip "$(identifier)/"
