@@ -1,0 +1,15 @@
+language: node_js
+before_script:
+- make build
+before_deploy:
+- make archive
+deploy:
+  provider: releases
+  api_key:
+    secure: ddeCIt3NPjNSWQNmwaBuVJJNDEIG6qufyQsrx/ZhRz7VL6hOFggOaWvGCrPEYRUywFeMkBZWIzbGhiD274/938Xn9RSb8X88y/tcsDbISeXfN1Y6tZfyo8IbrQQrnn0kzgI3e1Xx6IcdUHzTn+uSsZS5JVPqGOrCVrBzd/h1ZBZJ730mfKgwC8Cj6/QPn5mZjO3gTw7UXHGOpRFzs3moU8fakeRiqtwE6TowzIBCWKjgATyU4h34LwozPStdDzczqf59xFXk1HIhbPw1uF6V9dqfg1xxJq9sSDJp+OzAGAT6A7/mg07TNsK54ssuff0zPcNVv+sxHa1Ilw6HbZ4xyHAB1fTJFwSNDE6YsiDG6702HosYHL+XsJtOkcn+SvrzZeyGOV1n5s1FTixuXp1u8ibwSogJIoSLUJOEVbO0y1EjAnTbr2u/vj8z39brj8YrrW1tSW1c9GA0qAiKSQWUeMTjQiBW5/aIqYwRs9FWwqUgXA2UWdPufvyi6WtanJSvpyEvIgMu5GiiFkpMLvk6aQz1iHy7O9Ef859PauYyIrG1XTMf2wiMN2vuxvcqHQsjHtCpnms8nGZFQz1qBfHbU+Iwf8q0DEfFW34Tgaa4olvz4nTRmlrG/Ub4tu3JR2OyMkti1SfQ6obf4ZwEbmMsi1F9uByTHNkBv6HBQTLWfR8=
+  file: build/JsonWebTokenDynamicValue.zip
+  skip_cleanup: true
+  on:
+    tags: true
+    all_branches: true
+    repo: luckymarmot/Paw-JsonWebTokenDynamicValue
