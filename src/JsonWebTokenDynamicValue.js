@@ -7,7 +7,6 @@ class JsonWebTokenDynamicValue {
   static help = 'https://github.com/choffmeister/Paw-JsonWebTokenDynamicValue';
 
   static inputs = [
-    DynamicValueInput('isExpired', 'Expired', 'Checkbox'),
     InputField('header', 'Header', 'JSON', {persisted: true, defaultValue: '{"typ": "JWT", "alg": "HS256"}'}),
     DynamicValueInput('payload', 'Payload', 'JSON'),
     DynamicValueInput('signatureSecret', 'Secret', 'SecureValue'),
@@ -24,11 +23,7 @@ class JsonWebTokenDynamicValue {
       ...this.header
     }
 
-    const payload = {
-      exp: !this.isExpired ? now + oneHour : now - oneHour,
-      iat: !this.isExpired ? now           : now - 2*oneHour,
-      ...this.payload
-    }
+    const payload = this.payload
 
 
     const secret = this.signatureSecretIsBase64
