@@ -8,6 +8,7 @@ class JsonWebTokenDynamicValue {
 
   static inputs = [
     DynamicValueInput('isExpired', 'Expired', 'Checkbox'),
+    InputField('header', 'Header', 'JSON', {persisted: true, defaultValue: '{"typ": "JWT", "alg": "HS256"}'}),
     DynamicValueInput('payload', 'Payload', 'JSON'),
     DynamicValueInput('signatureSecret', 'Secret', 'SecureValue'),
     DynamicValueInput('signatureSecretIsBase64', 'Secret is Base64', 'Checkbox')
@@ -18,14 +19,17 @@ class JsonWebTokenDynamicValue {
     const oneHour = 60 * 60;
 
     const header = {
-      typ: 'JWT',
-      alg: 'HS256'
-    };
+      typ: "JWT",
+      alg: "HS256",
+      ...this.header
+    }
+
     const payload = {
-      ...this.payload,
       exp: !this.isExpired ? now + oneHour : now - oneHour,
-      iat: !this.isExpired ? now           : now - 2*oneHour
-    };
+      iat: !this.isExpired ? now           : now - 2*oneHour,
+      ...this.payload
+    }
+
 
     const secret = this.signatureSecretIsBase64
       ? {b64: jsrsasign.b64utob64(this.signatureSecret)}
