@@ -36,7 +36,7 @@ class JsonWebTokenDynamicValue {
 
     const secret = this.signatureSecretIsBase64
       ? {b64: jsrsasign.b64utob64(this.signatureSecret)}
-      : this.signatureSecret;
+      : {rstr: this.signatureSecret};
 
     return jsrsasign.jws.JWS.sign(null, header, payload, secret);
   }
