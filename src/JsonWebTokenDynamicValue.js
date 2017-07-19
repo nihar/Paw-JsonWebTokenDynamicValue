@@ -60,9 +60,9 @@ class JsonWebTokenDynamicValue {
 
     const secret = this.signatureSecretIsBase64
       ? {b64: jsrsasign.b64utob64(this.signatureSecret)}
-      : {rstr: this.signatureSecret};
+      : {utf8: this.signatureSecret}
 
-    console.log(`Sign JWT: Header: ${JSON.stringify(header)} Payload: ${JSON.stringify(payload)}`)
+    console.log(`Sign JWT: Header: ${JSON.stringify(header)} Payload: ${JSON.stringify(payload)} Secret: ${JSON.stringify(secret)}`)
     if (SUPPORTED_ALGS.indexOf(header.alg) < 0) {
       console.error(`Unsupported algorithm '${header.alg}' (supports ${SUPPORTED_ALGS.join(', ')})`)
     }
