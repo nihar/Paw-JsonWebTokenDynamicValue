@@ -9,6 +9,7 @@ clean:
 	rm -Rf ./build/
 
 install: clean build
+	rm -rf "$(extensions_dir)$(identifier)/"
 	mkdir -p "$(extensions_dir)$(identifier)/"
 	cp -r ./build/$(identifier)/* "$(extensions_dir)$(identifier)/"
 
