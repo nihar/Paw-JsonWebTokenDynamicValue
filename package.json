@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "main": "src/JsonWebTokenDynamicValue.js",
   "license": "MIT",
-  "homepage": "https://github.com/choffmeister/Paw-JsonWebTokenDynamicValue",
+  "homepage": "https://github.com/luckymarmot/Paw-JsonWebTokenDynamicValue",
   "dependencies": {
     "babel-plugin-transform-flow-strip-types": "6.7.0",
     "babel-polyfill": "6.6.1",
@@ -37,6 +37,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:choffmeister/Paw-JsonWebTokenDynamicValue.git"
+    "url": "git@github.com:luckymarmot/Paw-JsonWebTokenDynamicValue.git"
   }
 }
