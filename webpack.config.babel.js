@@ -13,7 +13,7 @@ const config = {
   ],
   output:{
     path: path.join(__dirname, './build/de.choffmeister.PawExtensions.JsonWebTokenDynamicValue'),
-    pathInfo: true,
+    pathinfo: true,
     publicPath: '/build/',
     filename: name + '.js'
   },
