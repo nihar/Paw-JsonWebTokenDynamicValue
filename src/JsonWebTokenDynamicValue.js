@@ -32,7 +32,7 @@ class JsonWebTokenDynamicValue {
     InputField('payload', 'Payload', 'JSON'),
     InputField('addTimeFields', 'Add Time Fields (iat & exp)', 'Checkbox', {defaultValue: true}),
     InputField('signatureSecret', 'Secret', 'SecureValue'),
-    InputField('signatureSecretIsBase64', 'Secret is Base64', 'Checkbox')
+    InputField('signatureSecretIsBase64', 'Secret is Base64URL encoded', 'Checkbox')
   ];
 
   title() {
@@ -58,9 +58,18 @@ class JsonWebTokenDynamicValue {
       payload = { ...this.payload }
     }
 
-    const secret = this.signatureSecretIsBase64
-      ? {b64: jsrsasign.b64utob64(this.signatureSecret)}
-      : {utf8: this.signatureSecret}
+    let secret;
+
+    if(this.alg.substring(0, 2) == "HS") {
+      secret = this.signatureSecretIsBase64
+        ? {b64: jsrsasign.b64utob64(this.signatureSecret)}
+        : {utf8: this.signatureSecret}
+    } else {
+      secret = this.signatureSecretIsBase64
+        ? jsrsasign.b64utoutf8(this.signatureSecret)
+        : this.signatureSecret
+    }
+
 
     console.log(`Sign JWT: Header: ${JSON.stringify(header)} Payload: ${JSON.stringify(payload)} Secret: ${JSON.stringify(secret)}`)
     if (SUPPORTED_ALGS.indexOf(header.alg) < 0) {
