@@ -43,7 +43,7 @@ class JsonWebTokenDynamicValue {
     const now = Math.floor((new Date()).getTime() / 1000);
     const header = {
       typ: "JWT",
-      alg: "HS256",
+      alg: this.alg,
       ...this.header
     }
 
