@@ -32,7 +32,7 @@ class JsonWebTokenDynamicValue {
     InputField('payload', 'Payload', 'JSON'),
     InputField('addTimeFields', 'Add Time Fields (iat & exp)', 'Checkbox', {defaultValue: true}),
     InputField('signatureSecret', 'Secret', 'SecureValue'),
-    InputField('signatureSecretIsBase64', 'Secret is Base64URL encoded', 'Checkbox')
+    InputField('signatureSecretIsBase64', 'Secret is Base64 URL-Encoded', 'Checkbox')
   ];
 
   title() {
@@ -40,7 +40,7 @@ class JsonWebTokenDynamicValue {
   }
 
   evaluate() {
-    const now = Math.floor((new Date()).getTime() / 1000);
+    const now = Math.floor((new Date()).getTime() / 1000)
     const header = {
       typ: "JWT",
       alg: this.alg,
@@ -48,7 +48,7 @@ class JsonWebTokenDynamicValue {
     }
 
     let payload
-    if(this.addTimeFields) {
+    if (this.addTimeFields) {
       payload = {
         iat: now,
         exp: now + 60,
@@ -58,9 +58,8 @@ class JsonWebTokenDynamicValue {
       payload = { ...this.payload }
     }
 
-    let secret;
-
-    if(this.alg.substring(0, 2) == "HS") {
+    let secret
+    if (header.alg.substring(0, 2) == "HS") {
       secret = this.signatureSecretIsBase64
         ? {b64: jsrsasign.b64utob64(this.signatureSecret)}
         : {utf8: this.signatureSecret}
@@ -70,12 +69,11 @@ class JsonWebTokenDynamicValue {
         : this.signatureSecret
     }
 
-
     console.log(`Sign JWT: Header: ${JSON.stringify(header)} Payload: ${JSON.stringify(payload)} Secret: ${JSON.stringify(secret)}`)
     if (SUPPORTED_ALGS.indexOf(header.alg) < 0) {
       console.error(`Unsupported algorithm '${header.alg}' (supports ${SUPPORTED_ALGS.join(', ')})`)
     }
 
-    return jsrsasign.jws.JWS.sign(null, header, payload, secret);
+    return jsrsasign.jws.JWS.sign(null, header, payload, secret)
   }
 }
