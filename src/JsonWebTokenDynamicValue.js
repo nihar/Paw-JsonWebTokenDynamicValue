@@ -27,12 +27,12 @@ class JsonWebTokenDynamicValue {
   static title = 'Json Web Token (JWT)';
   static help = 'https://github.com/luckymarmot/Paw-JsonWebTokenDynamicValue';
   static inputs = [
-    InputField('alg', 'Algorithm', 'Select', {choices: ALGS_CHOICES, defaultValue: 'HS256'}),
+    InputField('alg', 'Algorithm', 'Select', {choices: ALGS_CHOICES, defaultValue: 'HS512'}),
     InputField('header', 'Header', 'JSON', {defaultValue: '{}'}),
     InputField('payload', 'Payload', 'JSON'),
     InputField('addTimeFields', 'Add Time Fields (iat, nbf & exp)', 'Checkbox', {defaultValue: true}),
     InputField('signatureSecret', 'Secret', 'SecureValue'),
-    InputField('signatureSecretIsBase64', 'Secret is Base64', 'Checkbox')
+    InputField('signatureSecretIsBase64', 'Secret is Base64 URL-Encoded', 'Checkbox')
   ];
 
   title() {
@@ -40,15 +40,15 @@ class JsonWebTokenDynamicValue {
   }
 
   evaluate() {
-    const now = Math.floor((new Date()).getTime() / 1000);
+    const now = Math.floor((new Date()).getTime() / 1000)
     const header = {
       typ: "JWT",
-      alg: "HS512",
+      alg: this.alg,
       ...this.header
     }
 
     let payload
-    if(this.addTimeFields) {
+    if (this.addTimeFields) {
       payload = {
         alg: this.alg,
         ...this.payload,
@@ -63,15 +63,22 @@ class JsonWebTokenDynamicValue {
       }
     }
 
-    const secret = this.signatureSecretIsBase64
-      ? {b64: jsrsasign.b64utob64(this.signatureSecret)}
-      : {utf8: this.signatureSecret}
+    let secret
+    if (header.alg.substring(0, 2) == "HS") {
+      secret = this.signatureSecretIsBase64
+        ? {b64: jsrsasign.b64utob64(this.signatureSecret)}
+        : {utf8: this.signatureSecret}
+    } else {
+      secret = this.signatureSecretIsBase64
+        ? jsrsasign.b64utoutf8(this.signatureSecret)
+        : this.signatureSecret
+    }
 
     console.log(`Sign JWT: Header: ${JSON.stringify(header)} Payload: ${JSON.stringify(payload)} Secret: ${JSON.stringify(secret)}`)
     if (SUPPORTED_ALGS.indexOf(header.alg) < 0) {
       console.error(`Unsupported algorithm '${header.alg}' (supports ${SUPPORTED_ALGS.join(', ')})`)
     }
 
-    return jsrsasign.jws.JWS.sign(null, header, payload, secret);
+    return jsrsasign.jws.JWS.sign(null, header, payload, secret)
   }
 }
