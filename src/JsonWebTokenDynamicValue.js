@@ -30,7 +30,7 @@ class JsonWebTokenDynamicValue {
     InputField('alg', 'Algorithm', 'Select', {choices: ALGS_CHOICES, defaultValue: 'HS256'}),
     InputField('header', 'Header', 'JSON', {defaultValue: '{}'}),
     InputField('payload', 'Payload', 'JSON'),
-    InputField('addTimeFields', 'Add Time Fields (iat & exp)', 'Checkbox', {defaultValue: true}),
+    InputField('addTimeFields', 'Add Time Fields (iat, nbf & exp)', 'Checkbox', {defaultValue: true}),
     InputField('signatureSecret', 'Secret', 'SecureValue'),
     InputField('signatureSecretIsBase64', 'Secret is Base64', 'Checkbox')
   ];
@@ -43,19 +43,24 @@ class JsonWebTokenDynamicValue {
     const now = Math.floor((new Date()).getTime() / 1000);
     const header = {
       typ: "JWT",
-      alg: "HS256",
+      alg: "HS512",
       ...this.header
     }
 
     let payload
     if(this.addTimeFields) {
       payload = {
-        iat: now,
-        exp: now + 60,
+        alg: this.alg,
         ...this.payload,
+        iat: now,
+        nbf: now - 1,
+        exp: now + 60
       }
     } else {
-      payload = { ...this.payload }
+      payload = { 
+        alg: this.alg,
+        ...this.payload 
+      }
     }
 
     const secret = this.signatureSecretIsBase64
